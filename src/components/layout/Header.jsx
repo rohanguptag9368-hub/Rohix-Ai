@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   FiBell,
   FiMoon,
@@ -64,9 +65,12 @@ export default function Header() {
 
         </div>
 
-        <button className="h-11 px-5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-sm font-semibold">
-          ✨ Pro
-        </button>
+        <Link
+        to="/pricing"
+        className="h-11 px-5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 text-sm font-semibold flex items-center justify-center transition hover:scale-105 hover:shadow-[0_0_20px_rgba(34,211,238,.4)]"
+        >
+       ✨ Upgrade
+       </Link>
 
         <button className="h-11 w-11 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center">
           <FiMoon className="text-white"/>

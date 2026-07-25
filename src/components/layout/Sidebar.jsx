@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useChat } from "../../context/ChatContext";
 import {
   FiMenu,
   FiX,
@@ -20,10 +22,14 @@ const recentChats = [
 ];
 
 export default function Sidebar({
+  
   onNewChat,
   onExplore,
 }) {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+
+  const { chats, loadChat } = useChat();
 
   return (
     <>
@@ -139,20 +145,27 @@ export default function Sidebar({
             }}
           />
 
-          <Menu
-            title="Files"
-            icon={<FiFolder />}
-          />
-
+         <Menu
+  title="Vault"
+  icon={<FiFolder />}
+  onClick={() => {
+    navigate("/vault");
+    setOpen(false);
+  }}
+/>
           <Menu
             title="History"
             icon={<FiClock />}
           />
 
           <Menu
-            title="Bookmarks"
-            icon={<FiBookmark />}
-          />
+  title="Bookmarks"
+  icon={<FiBookmark />}
+  onClick={() => {
+    navigate("/bookmarks");
+    setOpen(false);
+  }}
+/>
 
         </div>        {/* Recent Chats */}
         <div className="relative flex-1 mt-6 px-4 overflow-y-auto">
@@ -182,7 +195,13 @@ export default function Sidebar({
         {/* User */}
         <div className="border-t border-white/10 p-4">
 
-          <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3">
+          <div
+  onClick={() => {
+    navigate("/profile");
+    setOpen(false);
+  }}
+  className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-3 hover:border-cyan-500 hover:bg-cyan-500/10 transition"
+>
 
             <div className="h-10 w-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold">
               R
@@ -200,10 +219,14 @@ export default function Sidebar({
 
             </div>
 
-            <button className="h-9 w-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-300 hover:bg-cyan-500 hover:text-white transition">
-
-              <FiSettings size={16} />
-
+            <button
+            onClick={() => {
+            navigate("/setting");
+            setOpen(false);
+            }}
+            className="h-9 w-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-300 hover:bg-cyan-500 hover:text-white transition"
+            >
+               <FiSettings size={16} />
             </button>
 
           </div>

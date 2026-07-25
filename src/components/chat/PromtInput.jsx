@@ -56,7 +56,7 @@ export default function PromptInput({
             placeholder:text-gray-500
             outline-none
             max-h-[220px]
-            overflow-y-auto
+            overflow-y-auto scrollbar-hide
           "
         />
 

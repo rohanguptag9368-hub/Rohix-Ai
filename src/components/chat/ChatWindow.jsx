@@ -7,6 +7,7 @@ import rehypeHighlight from "rehype-highlight";
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { useChat } from "../../context/ChatContext";
 
 import {
   FiSend,
@@ -41,8 +42,11 @@ export default function ChatWindow() {
         "👋 Welcome to Rohix AI.\n\nI'm your intelligent AI assistant. Ask me anything.",
     },
   ];
-
-  const [messages, setMessages] = useState(defaultMessages);
+const { 
+  messages, 
+  setMessages, 
+  saveChat 
+} = useChat();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const textareaRef = useRef(null);
@@ -141,6 +145,9 @@ export default function ChatWindow() {
           text: response,
         },
       ]);
+      setTimeout(() => {
+      saveChat();
+      }, 300);
     } catch (error) {
       setMessages((prev) => [
         ...prev,
@@ -149,6 +156,9 @@ export default function ChatWindow() {
           text: "❌ " + error.message,
         },
       ]);
+      setTimeout(() => {
+      saveChat();
+      }, 300);
     } finally {
       setLoading(false);
     }
