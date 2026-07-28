@@ -9,6 +9,7 @@ export default function useSendMessage({
   saveChat,
   setShowExplore,
 }) {
+
   // ================= SEND MESSAGE =================
 
   const sendMessage = async () => {
@@ -16,6 +17,7 @@ export default function useSendMessage({
 
     const prompt = input.trim();
 
+    // User Message
     setMessages((prev) => [
       ...prev,
       {
@@ -32,33 +34,40 @@ export default function useSendMessage({
     setLoading(true);
 
     try {
+
       const response = await askGemini(prompt);
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "ai",
-          text: response,
-        },
-      ]);
+      setMessages((prev) => {
 
-      setTimeout(() => {
-        saveChat();
-      }, 300);
+        const updated = [
+          ...prev,
+          {
+            role: "ai",
+            text: response,
+          },
+        ];
+
+        saveChat(updated);
+
+        return updated;
+      });
 
     } catch (error) {
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "ai",
-          text: "❌ " + error.message,
-        },
-      ]);
+      setMessages((prev) => {
 
-      setTimeout(() => {
-        saveChat();
-      }, 300);
+        const updated = [
+          ...prev,
+          {
+            role: "ai",
+            text: "❌ " + error.message,
+          },
+        ];
+
+        saveChat(updated);
+
+        return updated;
+      });
 
     } finally {
 

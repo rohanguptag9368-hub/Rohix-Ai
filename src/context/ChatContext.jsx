@@ -33,18 +33,18 @@ export const ChatProvider = ({ children }) => {
   };
 
   // Save Current Chat
-  const saveChat = () => {
-    if (messages.length <= 1) return;
+  const saveChat = (currentMessages) => {
+    if (currentMessages.length <= 1) return;
 
     const newChat = {
       id: Date.now(),
 
       title:
-        messages.find(
+        currentMessages.find(
           (msg) => msg.role === "user"
         )?.text?.slice(0, 30) || "New Chat",
 
-      messages,
+     messages: currentMessages,
 
       createdAt: new Date().toISOString(),
     };

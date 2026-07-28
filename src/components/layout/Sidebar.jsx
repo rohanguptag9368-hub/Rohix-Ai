@@ -8,6 +8,7 @@ import UpgradeCard from "../sidebar/UpgradeCard";
 import SidebarMenu from "../sidebar/SidebarMenu";
 import RecentChats from "../sidebar/RecentChats";
 import UserProfileCard from "../sidebar/UserProfileCard";
+
 export default function Sidebar({
   onNewChat,
   onExplore,
@@ -50,9 +51,8 @@ export default function Sidebar({
           backdrop-blur-2xl
           transition-all
           duration-300
-         lg:sticky
-         lg:top-0
-
+          lg:sticky
+          lg:top-0
           ${
             open
               ? "translate-x-0"
@@ -63,31 +63,40 @@ export default function Sidebar({
         {/* Background Glow */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(6,182,212,.08),transparent_45%)]" />
 
-        <SidebarHeader
-          setOpen={setOpen}
-        />
+        {/* Fixed Header */}
+        <SidebarHeader setOpen={setOpen} />
 
+        {/* Fixed New Chat */}
         <NewChatButton
           onNewChat={onNewChat}
           setOpen={setOpen}
         />
 
-        <SearchBox />
+        {/* Scrollable Area */}
+        <div className="flex-1 overflow-y-auto scrollbar-hide">
 
-        <UpgradeCard
+          <SearchBox />
+
+          <UpgradeCard
+            setOpen={setOpen}
+          />
+
+          <SidebarMenu
+            onExplore={onExplore}
+            setOpen={setOpen}
+          />
+
+          <RecentChats
+            setOpen={setOpen}
+          />
+
+        </div>
+
+        {/* Fixed Bottom */}
+        <UserProfileCard
           setOpen={setOpen}
         />
 
-        <SidebarMenu
-          onExplore={onExplore}
-          setOpen={setOpen}
-        />
-
-        <div className="flex-1 min-h-0">
-  <RecentChats setOpen={setOpen} />
-</div>
-
-<UserProfileCard setOpen={setOpen} />
       </aside>
     </>
   );
