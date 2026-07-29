@@ -24,6 +24,7 @@ export default function ChatWindow() {
     messages,
     setMessages,
     saveChat,
+    clearChat,
   } = useChat();
 
   const [input, setInput] = useState("");
@@ -31,7 +32,6 @@ export default function ChatWindow() {
 
   const bottomRef = useRef(null);
 
-  // Default Welcome Message
   const defaultMessages = [
     {
       role: "ai",
@@ -42,6 +42,7 @@ export default function ChatWindow() {
 
   // New Chat
   useEffect(() => {
+    clearChat();
     setMessages(defaultMessages);
     setInput("");
   }, [newChatTrigger]);
@@ -68,7 +69,6 @@ export default function ChatWindow() {
     setShowExplore,
   });
 
-  // Explore Screen
   if (showExplore) {
     return (
       <ExploreScreen
@@ -80,14 +80,9 @@ export default function ChatWindow() {
 
   return (
     <div className="flex h-[calc(100vh-64px)] gap-4 lg:gap-6 overflow-hidden">
-
-      {/* Center */}
       <div className="flex flex-1 flex-col min-w-0 h-full overflow-hidden">
-
         {messages.length === 1 && (
-          <WelcomeSection
-            setInput={setInput}
-          />
+          <WelcomeSection setInput={setInput} />
         )}
 
         <ChatMessages
@@ -105,12 +100,9 @@ export default function ChatWindow() {
           sendMessage={sendMessage}
           loading={loading}
         />
-
       </div>
 
-      {/* Right Panel */}
       <RightPanel />
-
     </div>
   );
 }

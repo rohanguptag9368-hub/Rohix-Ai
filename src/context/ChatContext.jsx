@@ -1,25 +1,21 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-// Create Context
 const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
-  // Current active messages
   const [messages, setMessages] = useState([]);
 
-  // Chat history
   const [chats, setChats] = useState([]);
 
-  // Current opened chat
   const [currentChatId, setCurrentChatId] = useState(null);
 
   // ================= Load Chats =================
 
   useEffect(() => {
-    const savedChats = localStorage.getItem("rohix_chats");
+    const saved = localStorage.getItem("rohix_chats");
 
-    if (savedChats) {
-      setChats(JSON.parse(savedChats));
+    if (saved) {
+      setChats(JSON.parse(saved));
     }
   }, []);
 
@@ -38,32 +34,19 @@ export const ChatProvider = ({ children }) => {
     setMessages((prev) => [...prev, message]);
   };
 
-  // ================= Save / Update Chat =================
+  // ================= Save Chat =================
 
   const saveChat = (currentMessages) => {
-    if (currentMessages.length <= 1) return;
+    // Ignore only welcome message
+    if (
+      currentMessages.length === 1 &&
+      currentMessages[0].role === "ai"
+    ) {
+      return;
+    }
 
-    if (currentChatId === null) {
-      const chatId = Date.now();
-
-      const newChat = {
-        id: chatId,
-
-        title:
-          currentMessages.find(
-            (msg) => msg.role === "user"
-          )?.text?.slice(0, 30) || "New Chat",
-
-        messages: currentMessages,
-
-        createdAt: new Date().toISOString(),
-      };
-
-      setChats((prev) => [newChat, ...prev]);
-
-      setCurrentChatId(chatId);
-
-    } else {
+    // Existing chat → update
+    if (currentChatId !== null) {
       setChats((prev) =>
         prev.map((chat) =>
           chat.id === currentChatId
@@ -74,7 +57,28 @@ export const ChatProvider = ({ children }) => {
             : chat
         )
       );
+
+      return;
     }
+
+    // New chat
+    const id = Date.now();
+
+    const newChat = {
+      id,
+      title:
+        currentMessages.find(
+          (m) => m.role === "user"
+        )?.text.slice(0, 30) || "New Chat",
+
+      messages: currentMessages,
+
+      createdAt: new Date().toISOString(),
+    };
+
+    setChats((prev) => [newChat, ...prev]);
+
+    setCurrentChatId(id);
   };
 
   // ================= Load Chat =================
@@ -84,14 +88,14 @@ export const ChatProvider = ({ children }) => {
     setCurrentChatId(chat.id);
   };
 
-  // ================= Delete Chat =================
+  // ================= Delete =================
 
-  const deleteChat = (chatId) => {
+  const deleteChat = (id) => {
     setChats((prev) =>
-      prev.filter((chat) => chat.id !== chatId)
+      prev.filter((chat) => chat.id !== id)
     );
 
-    if (chatId === currentChatId) {
+    if (currentChatId === id) {
       setMessages([]);
       setCurrentChatId(null);
     }
@@ -100,8 +104,15 @@ export const ChatProvider = ({ children }) => {
   // ================= New Chat =================
 
   const clearChat = () => {
-    setMessages([]);
     setCurrentChatId(null);
+
+    setMessages([
+      {
+        role: "ai",
+        text:
+          "👋 Welcome to Rohix AI.\n\nI'm your intelligent AI assistant. Ask me anything.",
+      },
+    ]);
   };
 
   return (
@@ -110,12 +121,13 @@ export const ChatProvider = ({ children }) => {
         messages,
         setMessages,
         addMessage,
-        clearChat,
 
         chats,
         saveChat,
         loadChat,
         deleteChat,
+
+        clearChat,
 
         currentChatId,
         setCurrentChatId,
@@ -125,8 +137,6 @@ export const ChatProvider = ({ children }) => {
     </ChatContext.Provider>
   );
 };
-
-// ================= Hook =================
 
 export const useChat = () => {
   const context = useContext(ChatContext);
