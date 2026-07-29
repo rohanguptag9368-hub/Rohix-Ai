@@ -8,7 +8,7 @@ import UpgradeCard from "../sidebar/UpgradeCard";
 import SidebarMenu from "../sidebar/SidebarMenu";
 import RecentChats from "../sidebar/RecentChats";
 import UserProfileCard from "../sidebar/UserProfileCard";
-
+import { motion } from "framer-motion";
 export default function Sidebar({
   onNewChat,
   onExplore,
@@ -34,7 +34,13 @@ export default function Sidebar({
       )}
 
       {/* Sidebar */}
-      <aside
+      <motion.aside
+  initial={{ x: -20, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  transition={{
+    duration: 0.35,
+    ease: "easeOut",
+  }}
         className={`
           fixed
           left-0
@@ -97,7 +103,7 @@ export default function Sidebar({
           setOpen={setOpen}
         />
 
-      </aside>
+      </motion.aside>
     </>
   );
 }

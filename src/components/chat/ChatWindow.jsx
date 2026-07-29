@@ -79,10 +79,10 @@ export default function ChatWindow() {
   }
 
   return (
-    <div className="flex h-full gap-4 lg:gap-6">
+    <div className="flex h-[calc(100vh-64px)] gap-4 lg:gap-6 overflow-hidden">
 
       {/* Center */}
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex flex-1 flex-col min-w-0 h-full overflow-hidden">
 
         {messages.length === 1 && (
           <WelcomeSection

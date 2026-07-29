@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
+
 import Sidebar from "./Sidebar";
 import GlowBackground from "../ui/GlowBackground";
 
@@ -8,8 +9,17 @@ export default function MainLayout() {
   const [showExplore, setShowExplore] = useState(false);
 
   return (
-    <div className="relative flex min-h-screen bg-[#030712] text-white">
-
+    <div
+      className="
+        relative
+        flex
+        h-screen
+        overflow-hidden
+        bg-[#030712]
+        text-white
+        antialiased
+      "
+    >
       {/* Background */}
       <GlowBackground />
 
@@ -19,26 +29,33 @@ export default function MainLayout() {
         onExplore={() => setShowExplore(true)}
       />
 
-      {/* Main Content */}
-      <div className="relative z-10 flex min-w-0 flex-1 flex-col">
-
-        {/* <Header /> */}
-
+      {/* Main */}
+      <div
+        className="
+          relative
+          z-10
+          flex
+          min-w-0
+          flex-1
+          flex-col
+          overflow-hidden
+          transform-gpu
+          transition-all
+          duration-300
+        "
+      >
         <main
           className="
             flex-1
-            min-w-0
-            overflow-y-auto
-            overflow-x-hidden
-
+            overflow-hidden
             px-4
-            py-5
+            py-4
 
             sm:px-6
-            sm:py-6
+            sm:py-5
 
             lg:px-8
-            lg:py-8
+            lg:py-6
 
             xl:px-10
           "
@@ -51,9 +68,7 @@ export default function MainLayout() {
             }}
           />
         </main>
-
       </div>
-
     </div>
   );
 }

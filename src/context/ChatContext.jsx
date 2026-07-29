@@ -4,13 +4,17 @@ import { createContext, useContext, useEffect, useState } from "react";
 const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
-  // Current active chat messages
+  // Current active messages
   const [messages, setMessages] = useState([]);
 
-  // All chat history
+  // Chat history
   const [chats, setChats] = useState([]);
 
-  // Load saved chats
+  // Current opened chat
+  const [currentChatId, setCurrentChatId] = useState(null);
+
+  // ================= Load Chats =================
+
   useEffect(() => {
     const savedChats = localStorage.getItem("rohix_chats");
 
@@ -19,7 +23,8 @@ export const ChatProvider = ({ children }) => {
     }
   }, []);
 
-  // Auto Save
+  // ================= Save LocalStorage =================
+
   useEffect(() => {
     localStorage.setItem(
       "rohix_chats",
@@ -27,62 +32,93 @@ export const ChatProvider = ({ children }) => {
     );
   }, [chats]);
 
-  // Add Message
+  // ================= Add Message =================
+
   const addMessage = (message) => {
     setMessages((prev) => [...prev, message]);
   };
 
-  // Save Current Chat
+  // ================= Save / Update Chat =================
+
   const saveChat = (currentMessages) => {
     if (currentMessages.length <= 1) return;
 
-    const newChat = {
-      id: Date.now(),
+    if (currentChatId === null) {
+      const chatId = Date.now();
 
-      title:
-        currentMessages.find(
-          (msg) => msg.role === "user"
-        )?.text?.slice(0, 30) || "New Chat",
+      const newChat = {
+        id: chatId,
 
-     messages: currentMessages,
+        title:
+          currentMessages.find(
+            (msg) => msg.role === "user"
+          )?.text?.slice(0, 30) || "New Chat",
 
-      createdAt: new Date().toISOString(),
-    };
+        messages: currentMessages,
 
-    setChats((prev) => [newChat, ...prev]);
+        createdAt: new Date().toISOString(),
+      };
+
+      setChats((prev) => [newChat, ...prev]);
+
+      setCurrentChatId(chatId);
+
+    } else {
+      setChats((prev) =>
+        prev.map((chat) =>
+          chat.id === currentChatId
+            ? {
+                ...chat,
+                messages: currentMessages,
+              }
+            : chat
+        )
+      );
+    }
   };
 
-  // Load Chat
+  // ================= Load Chat =================
+
   const loadChat = (chat) => {
     setMessages(chat.messages);
+    setCurrentChatId(chat.id);
   };
 
-  // Delete Chat
+  // ================= Delete Chat =================
+
   const deleteChat = (chatId) => {
     setChats((prev) =>
       prev.filter((chat) => chat.id !== chatId)
     );
+
+    if (chatId === currentChatId) {
+      setMessages([]);
+      setCurrentChatId(null);
+    }
   };
 
-  // Clear Current Chat
+  // ================= New Chat =================
+
   const clearChat = () => {
     setMessages([]);
+    setCurrentChatId(null);
   };
 
   return (
     <ChatContext.Provider
       value={{
-        // Current Chat
         messages,
         setMessages,
         addMessage,
         clearChat,
 
-        // History
         chats,
         saveChat,
         loadChat,
         deleteChat,
+
+        currentChatId,
+        setCurrentChatId,
       }}
     >
       {children}
@@ -90,7 +126,8 @@ export const ChatProvider = ({ children }) => {
   );
 };
 
-// Custom Hook
+// ================= Hook =================
+
 export const useChat = () => {
   const context = useContext(ChatContext);
 

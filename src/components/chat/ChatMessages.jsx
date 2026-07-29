@@ -1,24 +1,37 @@
 import MarkdownRenderer from "./MarkdownRenderer";
 import MessageActions from "./MessageActions";
+import { motion } from "framer-motion";
 
 export default function ChatMessages({
   messages,
   copyMessage,
 }) {
   return (
-    <div className="flex-1 overflow-y-auto scrollbar-hide px-6">
+    <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide px-6">
 
       {messages.map((msg, index) => (
 
-        <div
-          key={index}
-          className={`flex ${
-            msg.role === "user"
-              ? "justify-end"
-              : "justify-start"
-          }`}
-        >
-
+      <motion.div
+  key={index}
+  initial={{
+    opacity: 0,
+    y: 20,
+    scale: 0.98,
+  }}
+  animate={{
+    opacity: 1,
+    y: 0,
+    scale: 1,
+  }}
+  transition={{
+    duration: 0.28,
+  }}
+  className={`mb-5 flex ${
+    msg.role === "user"
+      ? "justify-end"
+      : "justify-start"
+  }`}
+>
           <div
             className={`max-w-[95%] md:max-w-[80%] rounded-3xl px-5 py-4 ${
               msg.role === "user"
@@ -27,9 +40,7 @@ export default function ChatMessages({
             }`}
           >
 
-            <MarkdownRenderer
-              text={msg.text}
-            />
+            <MarkdownRenderer text={msg.text} />
 
             {msg.role === "ai" && (
               <MessageActions
@@ -40,8 +51,7 @@ export default function ChatMessages({
 
           </div>
 
-        </div>
-
+</motion.div>
       ))}
 
     </div>
