@@ -12,8 +12,6 @@ import Vault from "../pages/Vault";
 import Bookmarks from "../pages/Bookmarks";
 import Pricing from "../pages/Pricing";
 
-import ProtectedRoute from "../components/auth/ProtectedRoute";
-
 const AppRoutes = () => {
   return (
     <BrowserRouter>
@@ -23,14 +21,8 @@ const AppRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* Protected Routes */}
-        <Route
-          element={
-            <ProtectedRoute>
-              <MainLayout />
-            </ProtectedRoute>
-          }
-        >
+        {/* Main Layout */}
+        <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/profile" element={<Profile />} />
