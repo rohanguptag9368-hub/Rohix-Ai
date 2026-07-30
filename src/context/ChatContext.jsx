@@ -3,10 +3,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
+  // Current Messages
   const [messages, setMessages] = useState([]);
 
+  // Chat History
   const [chats, setChats] = useState([]);
 
+  // Current Active Chat
   const [currentChatId, setCurrentChatId] = useState(null);
 
   // ================= Load Chats =================
@@ -34,7 +37,7 @@ export const ChatProvider = ({ children }) => {
     setMessages((prev) => [...prev, message]);
   };
 
-  // ================= Save Chat =================
+  // ================= Save / Update Chat =================
 
   const saveChat = (currentMessages) => {
     // Ignore only welcome message
@@ -45,7 +48,7 @@ export const ChatProvider = ({ children }) => {
       return;
     }
 
-    // Existing chat → update
+    // Existing Chat → Update
     if (currentChatId !== null) {
       setChats((prev) =>
         prev.map((chat) =>
@@ -57,11 +60,10 @@ export const ChatProvider = ({ children }) => {
             : chat
         )
       );
-
       return;
     }
 
-    // New chat
+    // New Chat
     const id = Date.now();
 
     const newChat = {
@@ -69,7 +71,7 @@ export const ChatProvider = ({ children }) => {
       title:
         currentMessages.find(
           (m) => m.role === "user"
-        )?.text.slice(0, 30) || "New Chat",
+        )?.text?.slice(0, 30) || "New Chat",
 
       messages: currentMessages,
 
@@ -88,14 +90,14 @@ export const ChatProvider = ({ children }) => {
     setCurrentChatId(chat.id);
   };
 
-  // ================= Delete =================
+  // ================= Delete Chat =================
 
   const deleteChat = (id) => {
     setChats((prev) =>
       prev.filter((chat) => chat.id !== id)
     );
 
-    if (currentChatId === id) {
+    if (id === currentChatId) {
       setMessages([]);
       setCurrentChatId(null);
     }

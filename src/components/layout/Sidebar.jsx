@@ -79,7 +79,7 @@ export default function Sidebar({
         />
 
         {/* Scrollable Area */}
-        <div className="flex-1 overflow-y-auto scrollbar-hide">
+        <div className="sidebar-scroll flex-1 overflow-y-auto">
 
           <SearchBox />
 

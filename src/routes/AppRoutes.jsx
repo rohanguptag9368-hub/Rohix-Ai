@@ -5,33 +5,41 @@ import MainLayout from "../components/layout/MainLayout";
 import Home from "../pages/Home";
 import Chat from "../pages/Chat";
 import Login from "../pages/Login";
-import Register from "../pages/Register";
+import Signup from "../pages/Signup";
 import Profile from "../pages/Profile";
 import Setting from "../pages/Setting";
 import Vault from "../pages/Vault";
 import Bookmarks from "../pages/Bookmarks";
-
 import Pricing from "../pages/Pricing";
+
+import ProtectedRoute from "../components/auth/ProtectedRoute";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
+
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/signup" element={<Signup />} />
 
-        {/* Main Layout Routes */}
-        <Route element={<MainLayout />}>
+        {/* Protected Routes */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route path="/" element={<Home />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/setting" element={<Setting />} />
           <Route path="/vault" element={<Vault />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
-          
           <Route path="/pricing" element={<Pricing />} />
         </Route>
+
       </Routes>
     </BrowserRouter>
   );
